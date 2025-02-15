@@ -19,11 +19,13 @@ if(ptr == NULL){
 
 
 //Exibe o valor armazenado
+
 for(int i=0;i<3;i++){
     
     printf("Valor armazenado: %d\n", *ptr);
     *ptr++;
 }
+printf("Valor armazenado: %d\n", *ptr);
 //libera a memoria alocada
 free(ptr);
 
