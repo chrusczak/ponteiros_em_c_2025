@@ -15,13 +15,8 @@ int main(){
         printf("Erro de alocação de memória!\n");
         return 1;
     }
-    for(int i =0;i<strlen(frase)+1;i++){
-        ptr[i]=frase[i];
-    }
-    printf("a frase digitada foi: ");
-    for(int j=0;j<strlen(frase);j++){
-        printf("%c",ptr[j]);
-    }
+    strcpy(ptr,frase);
+    printf("a frase digitada foi: %s ",ptr);
     //printf("\nA frase digitada foi %s",*ptr);
     free(ptr);
 
