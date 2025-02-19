@@ -2,14 +2,13 @@
 #include <stdlib.h>
 
 int main(){
-    int *p,*ptr,valor;
-    printf("digite um valor: ");
-    scanf("%d",p);
-    printf("\nvalor do ponteiro: %d \nendereço apontado pelo ponteiro: %p \nendereço do ponteiro:  %p",*p,p,&p);
+    int valor =5;
+    int *ptr = &valor;
 
-    printf("\n\ndigite um segundo valor");
-    scanf("%d",&valor);
-    *ptr=valor;
-    printf("\nvalor do ponteiro: %d \nendereço apontado pelo ponteiro: %p \nendereço do ponteiro:  %p",*ptr,ptr,&ptr);
-    printf("\nendereço da variavel: %p",&valor);
+    printf("\nvalor : %d",*ptr);
+    printf("\nenderço com valor %p",&valor);
+    printf("\nendereço com ponteiro: %p",ptr);
+    printf("\nendereço do ponteiro %p",&ptr);
+
+
 }
