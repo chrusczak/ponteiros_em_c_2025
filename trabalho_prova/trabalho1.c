@@ -22,12 +22,13 @@ struct Livro{
     char autor[100];
     int anoPublicacao;
     int quantidadeExemplares;
-
+    int seletor;
 };
 void lbuf(){
     int c;
     while((c=getchar())!=EOF && c != '\n');
 }
+
 //2. Funções obrigatórias: 
 void cadastrarLivro(struct Livro *livros, int *totalLivros){//Cadastra um novo livro. 
     //cadastro titulo
@@ -42,20 +43,21 @@ void cadastrarLivro(struct Livro *livros, int *totalLivros){//Cadastra um novo l
 
     //cadastro ano de publicação
     printf("digite o ano de publicação do livro");
-    scanf("%d",livros[*totalLivros].anoPublicacao);
+    scanf("%d",&livros[*totalLivros].anoPublicacao);
     lbuf();
 
     //cadastro quantidade de exemplares
     printf("digite a quantidade de exemplares do livro");
-    scanf("%d",livros[*totalLivros].quantidadeExemplares);
+    scanf("%d",&livros[*totalLivros].quantidadeExemplares);
     lbuf();
     // incrementando total livros e adicionando id
-    *totalLivros++;
-    livros[*totalLivros].id=*totalLivros;
     
+    livros[*totalLivros].id=(*totalLivros)+1;
+    livros[*totalLivros].seletor=0;
+    (*totalLivros)++;
 }
 void listarLivros(struct Livro *livros, int totalLivros){//Lista todos os livros cadastrados.
-    printf("\n--------título------|--------autor--------|-ano-|-qtd-| id \n");
+    printf("\n|--------título-------|--------autor--------|---ano-|-qtd| id \n");
     for(int i=0;i<totalLivros;i++){
         printf("%20s | %20s | %4d  |%2d  | %d",livros[i].titulo,livros[i].autor,livros[i].anoPublicacao,livros[i].quantidadeExemplares,livros[i].id);
         printf("\n__________________________________________________________________________________\n");
@@ -63,35 +65,42 @@ void listarLivros(struct Livro *livros, int totalLivros){//Lista todos os livros
 }
 struct Livro* buscarLivroPorTitulo(struct Livro *livros, int totalLivros, char *titulo){//: Busca um livro pelo título (retorna 
 //um ponteiro para o livro encontrado ou NULL se não existir). 
-    char busca[100];
-    char palavra[100];
-    int cont=0;
-    printf("\ndigite o titulo do livro: ");
-    fgets(busca,sizeof(busca),stdin);
-    busca[strcspn(busca,"\n")]='\0';
-    for(int k=0 ;busca[k]!='\0';k++){
-        busca[k]= toupper(busca[k]);
+    struct Livro *amostra = (struct Livro*) malloc(totalLivros * sizeof(struct Livro));
+    int cont=0,cont2=0,cont3=0;
+    char palavra1[100];
+    char palavra2[100];
+    for(int j=0;titulo[j]!='\0';j++){
+        palavra1[j]=toupper(titulo[j]);
+        cont2++;
     }
-    for(int i=0;i<totalLivros;i++){
-        strcpy(palavra,livros[i].titulo);
-        for(int j=0 ;palavra[j]!='\0';j++){
-            palavra[j]= toupper(palavra[j]);
+    palavra1[cont2+1]='\0';
+    
+    for(int i =0;i<totalLivros;i++){
+        cont3=0;
+        for(int k=0;livros[i].titulo[k]!='\0';k++){
+            palavra2[k]=toupper(titulo[k]);
+            cont3++;
         }
-        if(strncmp(livros[i].titulo,busca,strlen(busca)));
-        printf("%20s | %20s | %4d  |%2d  | %d",livros[i].titulo,livros[i].autor,livros[i].anoPublicacao,livros[i].quantidadeExemplares,livros[i].id);
-        printf("\n__________________________________________________________________________________\n");
-        cont++;
+        palavra2[cont3+1]='\0';
+        if(strcmp(palavra1,palavra2)==0){
+            amostra[cont]=livros[i];
+            amostra[cont].seletor=1;
+        }
     }
-    if(cont==0){
-        printf("\nnenhum exemplar localizado\n");
-    }
-
+    return amostra;
 }
-void atualizarExemplares(struct Livro *livro){//: Atualiza a 
+void atualizarExemplares(struct Livro *livros){//: Atualiza a 
 //quantidade de exemplares de um livro. 
-
+    
 }
 int menu(){
+    printf("------MENU PRINCIPAL----");
+    int opcao;
+    printf("\n\t1. Cadastrar novos livros. \n\t2. Listar todos os livros cadastrados. \n\t3. Buscar um livro pelo título. \n\t4. Atualizar a quantidade de exemplares de um livro. \n\t5. Sair do programa. ");
+    printf("\nescolha uma opção: ");
+    scanf("%d",&opcao);
+    lbuf();
+    return opcao;
 
 }
 
@@ -102,10 +111,59 @@ int main(){
 um livro). 
 ○ O acervo de livros deve ser armazenado em um array de structs alocado 
 dinamicamente. 
+    int id;
+    char titulo[100];
+    char autor[100];
+    int anoPublicacao;
+    int quantidadeExemplares;
 
 */
+char titulo[100];
 struct Livro *livros = (struct Livro*) malloc(NUM * sizeof(struct Livro));
-int totalLivros = 0;
+for(int i;i<NUM;i++){
+    livros[i].seletor=0;
+}
+// registros do chat
+livros[0] = (struct Livro){1, "Livro A", "Autor A", 2000, 10};
+livros[1] = (struct Livro){2, "Livro B", "Autor B", 2001, 5};
+livros[2] = (struct Livro){3, "Livro C", "Autor C", 2002, 8};
+livros[3] = (struct Livro){4, "Livro D", "Autor D", 2003, 12};
+livros[4] = (struct Livro){5, "Livro E", "Autor E", 2004, 3};
+
+if(livros==NULL){
+    printf("Erro ao alocar memória!\n");
+    return 1;
+}
+struct Livro *temp =NULL;
+int totalLivros = 5;
+
+int log =1;
+do{
+    switch(menu()){
+        case 1:
+            cadastrarLivro(livros,&totalLivros);
+            break;
+        case 2:
+            listarLivros(livros,totalLivros);
+            break;
+        case 3:
+            printf("\ndigite um titulo");
+            fgets(titulo,sizeof(titulo),stdin);
+            titulo[strcspn(titulo,"\n")]='\0';
+
+            break;
+        case 4:
+
+            break;
+        case 5: 
+            log=0;
+            break;
+        default:
+            printf("numero inválido,tente novamente");
+    }
+}while(log);
+free(livros);
+free(temp);
 /*
 4. Menu interativo: 
 ○ O programa deve exibir um menu para o usuário escolher entre as opções (1 
