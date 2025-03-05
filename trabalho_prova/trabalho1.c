@@ -63,7 +63,7 @@ void listarLivros(struct Livro *livros, int totalLivros){//Lista todos os livros
         printf("\n__________________________________________________________________________________\n");
     }
 }
-struct Livro* buscarLivroPorTitulo(struct Livro *livros, int totalLivros, char *titulo){//: Busca um livro pelo título (retorna 
+struct Livro* buscarLivroPorTitulo(struct Livro *livros, int totalLivros, char *titulo, int *qtd){//: Busca um livro pelo título (retorna 
 //um ponteiro para o livro encontrado ou NULL se não existir). 
     struct Livro *amostra = (struct Livro*) malloc(totalLivros * sizeof(struct Livro));
     int cont=0,cont2=0,cont3=0;
@@ -73,25 +73,43 @@ struct Livro* buscarLivroPorTitulo(struct Livro *livros, int totalLivros, char *
         palavra1[j]=toupper(titulo[j]);
         cont2++;
     }
-    palavra1[cont2+1]='\0';
+    palavra1[cont2]='\0';
     
     for(int i =0;i<totalLivros;i++){
         cont3=0;
         for(int k=0;livros[i].titulo[k]!='\0';k++){
-            palavra2[k]=toupper(titulo[k]);
+            palavra2[k]=toupper(livros[i].titulo[k]);
             cont3++;
         }
-        palavra2[cont3+1]='\0';
-        if(strcmp(palavra1,palavra2)==0){
+        palavra2[cont3]='\0';
+        if(strncmp(palavra1,palavra2,strlen(palavra1))==0){
             amostra[cont]=livros[i];
             amostra[cont].seletor=1;
+            cont++;
         }
     }
+    *qtd=cont;
     return amostra;
+    
 }
 void atualizarExemplares(struct Livro *livros){//: Atualiza a 
 //quantidade de exemplares de um livro. 
-    
+    int id,novo;
+    printf("\ndigite o id do livro que vc gostaria de atualizar: ");
+    scanf("%d",&id);
+    lbuf();
+    printf("\nexemplar selecionado: ");
+    int i= id-1;
+    printf("\n|--------título-------|--------autor--------|---ano-|-qtd| id \n");
+    printf("%20s | %20s | %4d  |%2d  | %d",livros[i].titulo,livros[i].autor,livros[i].anoPublicacao,livros[i].quantidadeExemplares,livros[i].id);
+    printf("\n digite a nova quantidade: ");
+    scanf("%d",&novo);
+    lbuf();
+    printf("\natualizando\n");
+    livros[i].quantidadeExemplares=novo;
+    printf("\n|--------título-------|--------autor--------|---ano-|-qtd| id \n");
+    printf("%20s | %20s | %4d  |%2d  | %d",livros[i].titulo,livros[i].autor,livros[i].anoPublicacao,livros[i].quantidadeExemplares,livros[i].id);
+
 }
 int menu(){
     printf("------MENU PRINCIPAL----");
@@ -118,6 +136,7 @@ dinamicamente.
     int quantidadeExemplares;
 
 */
+int qtd=0;
 char titulo[100];
 struct Livro *livros = (struct Livro*) malloc(NUM * sizeof(struct Livro));
 for(int i;i<NUM;i++){
@@ -147,13 +166,27 @@ do{
             listarLivros(livros,totalLivros);
             break;
         case 3:
-            printf("\ndigite um titulo");
+            printf("\ndigite um titulo: ");
             fgets(titulo,sizeof(titulo),stdin);
             titulo[strcspn(titulo,"\n")]='\0';
-
+            temp=buscarLivroPorTitulo(livros, totalLivros,titulo,&qtd);
+            printf("\n|--------título-------|--------autor--------|---ano-|-qtd| id \n");
+            for(int i =0;i<qtd;i++){
+                if(temp[i].seletor==1){
+                    printf("%20s | %20s | %4d  |%2d  | %d",temp[i].titulo,temp[i].autor,temp[i].anoPublicacao,temp[i].quantidadeExemplares,temp[i].id);
+                    printf("\n__________________________________________________________________________________\n");
+                }
+            
+            }
+            if(qtd==0){
+                
+                printf("\nnenhum exemplar encontrado\n");
+                printf("________________________________\n");
+            }
+            free(temp);
             break;
         case 4:
-
+            atualizarExemplares(livros);
             break;
         case 5: 
             log=0;
